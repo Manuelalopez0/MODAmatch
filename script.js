@@ -4,11 +4,13 @@
   const ICONS = ["👠", "👗", "🧥", "👜", "💄", "🕶️"];
 
   const screens = {
-    welcome: document.getElementById("welcome-screen"),
+    splash: document.getElementById("splash-screen"),
+    howto: document.getElementById("howto-screen"),
     game: document.getElementById("game-screen"),
     result: document.getElementById("result-screen"),
   };
 
+  const continueButton = document.getElementById("continue-btn");
   const startButton = document.getElementById("start-btn");
   const nextPlayerButton = document.getElementById("next-player-btn");
   const cardGrid = document.getElementById("card-grid");
@@ -27,6 +29,7 @@
   let roundActive = false;
   let currentDeck = [];
 
+  continueButton.addEventListener("click", () => showScreen("howto"));
   startButton.addEventListener("click", startGame);
   nextPlayerButton.addEventListener("click", handleNextPlayer);
 
@@ -43,8 +46,8 @@
 
   function handleNextPlayer() {
     resetRoundState();
-    showScreen("welcome");
-    startButton.focus({ preventScroll: true });
+    showScreen("splash");
+    continueButton.focus({ preventScroll: true });
   }
 
   function resetRoundState() {
@@ -63,17 +66,34 @@
     cardGrid.innerHTML = "";
     cardGrid.classList.remove("inactive");
     currentDeck = [];
-    timerDisplay.textContent = formatTime(ROUND_TIME);
+    timerDisplay.textContent = `Tiempo: ${formatTime(ROUND_TIME)}`;
     pairsDisplay.textContent = `Parejas: 0/${ICONS.length}`;
     resultTitle.textContent = "Resultado";
     resultMessage.textContent = "";
   }
 
   function showScreen(screenKey) {
+    // Hide all screens
     Object.values(screens).forEach((screen) => {
       screen.classList.remove("active");
+      screen.classList.add("is-hidden");
     });
-    screens[screenKey].classList.add("active");
+    // Show target screen
+    const targetScreen = screens[screenKey];
+    if (targetScreen) {
+      targetScreen.classList.remove("is-hidden");
+      // Use setTimeout to ensure screen is visible before focusing
+      setTimeout(() => {
+        targetScreen.classList.add("active");
+        // Focus management
+        const firstFocusable = targetScreen.querySelector(
+          "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
+        );
+        if (firstFocusable) {
+          firstFocusable.focus({ preventScroll: true });
+        }
+      }, 0);
+    }
   }
 
   function buildDeck() {
@@ -170,8 +190,16 @@
   }
 
   function updateHUD() {
-    timerDisplay.textContent = formatTime(timeLeft);
+    const previousPairs = pairsDisplay.textContent;
+
+    timerDisplay.textContent = `Tiempo: ${formatTime(timeLeft)}`;
     pairsDisplay.textContent = `Parejas: ${matchedPairs}/${ICONS.length}`;
+
+    // Add highlight animation only for pairs counter if value changed
+    if (previousPairs !== pairsDisplay.textContent) {
+      pairsDisplay.classList.add("highlight");
+      setTimeout(() => pairsDisplay.classList.remove("highlight"), 200);
+    }
   }
 
   function startTimer() {
@@ -208,7 +236,9 @@
       flipBackTimeout = null;
     }
     setCardInteractivity(false);
-    resultTitle.textContent = didWin ? "¡Trendsetter!" : "Casi casi…";
+    resultTitle.textContent = didWin
+      ? "¡Completaste el desafío!"
+      : "El tiempo se terminó.";
     resultMessage.textContent = didWin
       ? "Completaste las 6 parejas a tiempo."
       : "Se acabó el tiempo. Probá en la próxima.";

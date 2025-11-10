@@ -1,15 +1,34 @@
+/* ========================================
+   ModaMatch Visual Theme — Rosa Nude
+   ======================================== */
+
 :root {
-  --bg-gradient: radial-gradient(circle at top, #ffe5ec, #f4f0ff 50%, #f6f7fb);
-  --primary: #6c4dd9;
-  --primary-dark: #5534b9;
-  --accent: #f26ca7;
-  --text: #2d1c4a;
-  --muted: #6b5a8e;
-  --card-front: #ffffff;
-  --card-back: linear-gradient(135deg, #f7efff, #fde4f4);
-  --shadow: 0 16px 32px rgba(91, 63, 171, 0.15);
-  font-family: "Segoe UI", "San Francisco", "Helvetica Neue", Arial, sans-serif;
+  /* --- Palette --- */
+  --bg: #fdf9f7;
+  --ink: #2e2a2a;
+  --accent: #e7a6a1;
+  --accent-2: #c18683;
+  --card: #ffffff;
+  --muted: #9a8c88;
+  --ring: rgba(231, 166, 161, 0.35);
+
+  /* --- Typography --- */
+  --font-body: "Poppins", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Playfair Display", "Times New Roman", serif;
+
+  /* --- Elevation & Motion --- */
+  --shadow-card: 0 22px 48px rgba(46, 42, 42, 0.12);
+  --shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --transition: 300ms ease;
+
+  /* --- Layout --- */
+  --container-max: 900px;
+  font-size: 16px;
 }
+
+/* ========================================
+   Base Reset & Layout Helpers
+   ======================================== */
 
 *,
 *::before,
@@ -23,139 +42,316 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-gradient);
-  color: var(--text);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: min(var(--container-max), 92vw);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
 }
 
 .app {
-  width: min(960px, 92vw);
-  padding: clamp(1rem, 2vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
 }
 
 .screen {
   display: none;
   align-items: center;
   justify-content: center;
-  animation: fade-in 280ms ease-in;
 }
 
-.screen.active {
+.screen.is-hidden {
+  display: none !important;
+}
+
+.screen.active:not(.is-hidden) {
   display: flex;
+  animation: fade-in 500ms ease;
+  will-change: opacity, transform;
 }
 
-.card {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  padding: clamp(1.5rem, 4vw, 3.5rem);
-  text-align: center;
-  max-width: 520px;
-  width: min(100%, 520px);
+@media (prefers-reduced-motion: no-preference) {
+  .screen.active:not(.is-hidden) {
+    animation: fade-in 500ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen.active:not(.is-hidden) {
+    animation: none;
+  }
+}
+
+/* ========================================
+   Typography & Copy
+   ======================================== */
+
+h1,
+h2 {
+  font-family: var(--font-heading);
+  color: var(--ink);
 }
 
 h1 {
-  font-size: clamp(2.2rem, 4vw, 3rem);
+  font-size: clamp(2.4rem, 5vw, 3.1rem);
   margin: 0 0 0.75rem;
+  letter-spacing: 0.01em;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 2.8vw, 1.6rem);
+  margin: 0 0 0.85rem;
+}
+
+p,
+span {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  font-family: var(--font-body);
 }
 
 .tagline,
 .subtitle {
   color: var(--muted);
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 500;
   margin-bottom: 1.5rem;
 }
 
 .instructions {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.4rem;
   text-align: left;
+  color: var(--ink);
+}
+
+.instructions p + p {
+  margin-top: 0.8rem;
+}
+
+.instructions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.4rem;
+  text-align: left;
+  color: var(--ink);
+}
+
+.instructions-list li {
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.instructions-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.instructions-list li:last-child {
+  margin-bottom: 0;
+}
+
+.brand-mark {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--accent-2);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+/* ========================================
+   Cards & Panels
+   ======================================== */
+
+.card {
+  background: var(--card);
+  border-radius: 28px;
+  box-shadow: var(--shadow-card);
+  padding: clamp(1.8rem, 4vw, 3.2rem);
+  text-align: center;
+  width: min(100%, 540px);
+}
+
+.card--result {
+  padding: clamp(32px, 5vw, 48px) clamp(40px, 6vw, 64px);
+  max-width: 460px;
+  width: min(100%, 460px);
+}
+
+.card--result h2 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  color: var(--ink);
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.card--result p {
+  color: var(--muted);
   line-height: 1.6;
+  margin: 0 0 24px;
+  text-align: center;
 }
 
-.instructions h2 {
-  margin: 0 0 0.75rem;
-  font-size: 1.1rem;
-  color: var(--text);
+.card--result .btn {
+  margin: 0 auto;
 }
 
-.primary-button {
-  background: var(--primary);
-  border: none;
-  border-radius: 999px;
-  color: #fff;
+/* ========================================
+   Buttons
+   ======================================== */
+
+.btn {
+  background: var(--card);
+  border: 1px solid rgba(46, 42, 42, 0.08);
+  border-radius: 12px;
+  color: var(--ink);
   cursor: pointer;
-  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
   font-weight: 600;
-  padding: 0.85rem 2.8rem;
-  transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-soft);
+  will-change: transform, background-color, color;
 }
 
-.primary-button:hover,
-.primary-button:focus {
-  background: var(--primary-dark);
-  box-shadow: 0 12px 28px rgba(85, 52, 185, 0.2);
-  transform: translateY(-1px);
+.btn:hover,
+.btn:focus {
+  background: var(--accent-2);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(193, 134, 131, 0.25);
 }
 
-.primary-button:focus-visible {
-  outline: 3px solid rgba(242, 108, 167, 0.3);
-  outline-offset: 4px;
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring), 0 6px 16px rgba(193, 134, 131, 0.25);
 }
+
+.btn:active {
+  transform: scale(0.98) translateY(-1px);
+}
+
+/* ========================================
+   HUD
+   ======================================== */
 
 .hud {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.hud-text h1 {
-  margin-bottom: 0.35rem;
+  margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .hud-stats {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .stat {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--card);
   border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 0.75rem 1.5rem;
+  box-shadow: var(--shadow-soft);
+  padding: 0.65rem 1.35rem;
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  transition: background-color 0.2s ease;
+  will-change: background-color;
 }
 
 .stat-timer {
-  color: var(--accent);
+  border: 1px solid rgba(231, 166, 161, 0.25);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 1.1rem;
+  background: var(--card);
+  transition: none;
+  will-change: auto;
 }
+
+.stat-timer.highlight {
+  animation: none;
+}
+
+.stat-pairs {
+  color: var(--muted);
+}
+
+.stat-pairs.highlight {
+  animation: stat-highlight 200ms ease;
+}
+
+@keyframes stat-highlight {
+  0% {
+    background-color: var(--card);
+  }
+  50% {
+    background-color: rgba(193, 134, 131, 0.15);
+  }
+  100% {
+    background-color: var(--card);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-pairs.highlight {
+    animation: none;
+  }
+}
+
+/* ========================================
+   Game Board
+   ======================================== */
 
 .card-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  margin: 0 auto;
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  margin: 0 auto clamp(1rem, 3vw, 2.5rem);
   width: min(720px, 100%);
 }
 
 .card-grid.inactive {
   pointer-events: none;
   filter: grayscale(0.1);
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 .play-card {
   position: relative;
+  display: block;
   width: 100%;
-  padding-top: 130%;
   border: none;
   background: transparent;
   cursor: pointer;
-  perspective: 1100px;
-  border-radius: 20px;
+  perspective: 1200px;
+  border-radius: 18px;
+  aspect-ratio: 3 / 4;
 }
 
 .play-card:disabled {
@@ -163,26 +359,33 @@ h1 {
 }
 
 .play-card:focus-visible {
-  outline: 3px solid rgba(108, 77, 217, 0.35);
+  outline: 3px solid var(--ring);
   outline-offset: 3px;
 }
 
 .card-inner {
   position: absolute;
   inset: 0;
-  border-radius: 20px;
+  border-radius: 18px;
   transform-style: preserve-3d;
-  transition: transform 420ms cubic-bezier(0.36, 0, 0.34, 1.4);
-  box-shadow: var(--shadow);
+  transition: transform 0.4s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow-soft);
+  background: var(--card);
+  will-change: transform, box-shadow;
 }
 
-.play-card:not(.flipped):not(.matched):hover .card-inner {
-  transform: translateY(-4px);
+@media (hover: hover) and (pointer: fine) {
+  .play-card:not(.flipped):not(.matched):hover .card-inner {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
 }
 
 .play-card.flipped .card-inner,
 .play-card.matched .card-inner {
   transform: rotateY(180deg);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.4s ease-in-out, box-shadow 0.3s ease;
 }
 
 .card-face {
@@ -191,29 +394,38 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: 18px;
   backface-visibility: hidden;
 }
 
 .card-front {
-  background: var(--card-front);
-  border: 2px solid rgba(108, 77, 217, 0.18);
+  background: var(--card);
+  border: 2px solid rgba(46, 42, 42, 0.08);
 }
 
 .card-back {
-  background: var(--card-back);
+  background: linear-gradient(
+    145deg,
+    rgba(231, 166, 161, 0.18),
+    rgba(193, 134, 131, 0.3)
+  );
   transform: rotateY(180deg);
-  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--ink);
 }
 
 .play-card.matched .card-back {
-  box-shadow: inset 0 0 0 3px rgba(242, 108, 167, 0.4);
+  box-shadow: inset 0 0 0 3px var(--accent-2);
 }
+
+/* ========================================
+   Animations & Responsiveness
+   ======================================== */
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -221,7 +433,44 @@ h1 {
   }
 }
 
-@media (max-width: 640px) {
+@media (prefers-reduced-motion: reduce) {
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .screen.active:not(.is-hidden) {
+    animation-duration: 0s;
+  }
+}
+
+/* ========================================
+   Screen-specific Styles
+   ======================================== */
+
+.screen--splash .card {
+  padding: clamp(2.5rem, 5vw, 4rem);
+}
+
+.screen--howto .card {
+  text-align: left;
+}
+
+.screen--howto h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.screen--howto .btn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
   .hud {
     flex-direction: column;
     align-items: flex-start;
@@ -230,6 +479,20 @@ h1 {
   .hud-stats {
     width: 100%;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 540px) {
+  .card {
+    padding: 1.85rem;
+  }
+
+  .card--result {
+    padding: 32px 24px;
+  }
+
+  .card--result h2 {
+    font-size: 1.8rem;
   }
 
   .card-grid {

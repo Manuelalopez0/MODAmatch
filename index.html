@@ -4,50 +4,61 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ModaMatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app">
+    <main class="app container">
+      <!-- Splash Screen: Branding -->
       <section
-        class="screen active"
-        id="welcome-screen"
-        aria-labelledby="welcome-title"
+        class="screen screen--splash active"
+        id="splash-screen"
+        aria-labelledby="splash-title"
       >
         <div class="card">
-          <h1 id="welcome-title">ModaMatch</h1>
-          <p class="tagline">
-            Encontrá todas las parejas antes de que termine el tiempo.
-          </p>
-          <div class="instructions">
-            <h2>¿Cómo jugar?</h2>
-            <p>
-              Volteá dos cartas para revelar sus íconos. Si coinciden, la pareja
-              queda descubierta.
-            </p>
-            <p>
-              Memorizá la posición de cada ícono y encontrá las 6 parejas antes
-              de que pasen 45 segundos.
-            </p>
-          </div>
-          <button id="start-btn" class="primary-button" type="button">
-            Jugar
-          </button>
+          <h1 id="splash-title" class="brand-mark">ModaMatch</h1>
+          <p class="tagline">Memotest de moda</p>
+          <button id="continue-btn" class="btn" type="button">Continuar</button>
         </div>
       </section>
 
+      <!-- Instructions Screen -->
       <section
-        class="screen"
+        class="screen screen--howto is-hidden"
+        id="howto-screen"
+        aria-labelledby="howto-title"
+      >
+        <div class="card">
+          <h2 id="howto-title">¿Cómo jugar?</h2>
+          <ul class="instructions-list">
+            <li>Tenés 45 segundos para encontrar 6 parejas.</li>
+            <li>
+              Hacé clic para voltear 2 cartas; si coinciden, quedan
+              descubiertas.
+            </li>
+            <li>Una ronda por jugador. Al finalizar, se reinicia.</li>
+          </ul>
+          <button id="start-btn" class="btn" type="button">Empezar</button>
+        </div>
+      </section>
+
+      <!-- Game Screen -->
+      <section
+        class="screen screen--game is-hidden"
         id="game-screen"
         aria-labelledby="game-title"
         aria-live="polite"
       >
         <header class="hud">
-          <div class="hud-text">
-            <h1 id="game-title">ModaMatch</h1>
-            <span class="subtitle">Memoria y estilo en 45 segundos.</span>
-          </div>
           <div class="hud-stats">
-            <span id="timer" class="stat stat-timer">00:45</span>
+            <span id="timer" class="stat stat-timer">Tiempo: 00:45</span>
             <span id="pairs-counter" class="stat stat-pairs">Parejas: 0/6</span>
           </div>
         </header>
@@ -59,11 +70,16 @@
         ></div>
       </section>
 
-      <section class="screen" id="result-screen" aria-live="assertive">
-        <div class="card">
-          <h1 id="result-title">Resultado</h1>
+      <!-- Result Screen (Modal) -->
+      <section
+        class="screen is-hidden"
+        id="result-screen"
+        aria-live="assertive"
+      >
+        <div class="card card--result">
+          <h2 id="result-title">Resultado</h2>
           <p id="result-message"></p>
-          <button id="next-player-btn" class="primary-button" type="button">
+          <button id="next-player-btn" class="btn" type="button">
             Siguiente jugador
           </button>
         </div>
