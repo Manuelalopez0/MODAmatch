@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ModaMatch</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section
+        class="screen active"
+        id="welcome-screen"
+        aria-labelledby="welcome-title"
+      >
+        <div class="card">
+          <h1 id="welcome-title">ModaMatch</h1>
+          <p class="tagline">
+            Encontrá todas las parejas antes de que termine el tiempo.
+          </p>
+          <div class="instructions">
+            <h2>¿Cómo jugar?</h2>
+            <p>
+              Volteá dos cartas para revelar sus íconos. Si coinciden, la pareja
+              queda descubierta.
+            </p>
+            <p>
+              Memorizá la posición de cada ícono y encontrá las 6 parejas antes
+              de que pasen 45 segundos.
+            </p>
+          </div>
+          <button id="start-btn" class="primary-button" type="button">
+            Jugar
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="screen"
+        id="game-screen"
+        aria-labelledby="game-title"
+        aria-live="polite"
+      >
+        <header class="hud">
+          <div class="hud-text">
+            <h1 id="game-title">ModaMatch</h1>
+            <span class="subtitle">Memoria y estilo en 45 segundos.</span>
+          </div>
+          <div class="hud-stats">
+            <span id="timer" class="stat stat-timer">00:45</span>
+            <span id="pairs-counter" class="stat stat-pairs">Parejas: 0/6</span>
+          </div>
+        </header>
+        <div
+          id="card-grid"
+          class="card-grid"
+          role="grid"
+          aria-label="Tablero de cartas ModaMatch"
+        ></div>
+      </section>
+
+      <section class="screen" id="result-screen" aria-live="assertive">
+        <div class="card">
+          <h1 id="result-title">Resultado</h1>
+          <p id="result-message"></p>
+          <button id="next-player-btn" class="primary-button" type="button">
+            Siguiente jugador
+          </button>
+        </div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
