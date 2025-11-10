@@ -28,10 +28,25 @@
   let boardLocked = false;
   let roundActive = false;
   let currentDeck = [];
+  let buttonDebounce = false;
 
-  continueButton.addEventListener("click", () => showScreen("howto"));
-  startButton.addEventListener("click", startGame);
-  nextPlayerButton.addEventListener("click", handleNextPlayer);
+  continueButton.addEventListener(
+    "click",
+    debounceButton(() => showScreen("howto"))
+  );
+  startButton.addEventListener("click", debounceButton(startGame));
+  nextPlayerButton.addEventListener("click", debounceButton(handleNextPlayer));
+
+  function debounceButton(fn) {
+    return function (...args) {
+      if (buttonDebounce) return;
+      buttonDebounce = true;
+      fn.apply(this, args);
+      setTimeout(() => {
+        buttonDebounce = false;
+      }, 150);
+    };
+  }
 
   function startGame() {
     resetRoundState();
@@ -64,7 +79,7 @@
     boardLocked = false;
     roundActive = false;
     cardGrid.innerHTML = "";
-    cardGrid.classList.remove("inactive");
+    cardGrid.classList.remove("inactive", "is-busy");
     currentDeck = [];
     timerDisplay.textContent = `Tiempo: ${formatTime(ROUND_TIME)}`;
     pairsDisplay.textContent = `Parejas: 0/${ICONS.length}`;
@@ -140,6 +155,7 @@
 
     secondCard = card;
     boardLocked = true;
+    cardGrid.classList.add("is-busy");
     evaluateMatch();
   }
 
@@ -165,6 +181,7 @@
     matchedPairs += 1;
     updateHUD();
     resetSelection();
+    cardGrid.classList.remove("is-busy");
 
     if (matchedPairs === ICONS.length) {
       finishRound(true);
@@ -181,6 +198,7 @@
       });
       resetSelection();
       boardLocked = false;
+      cardGrid.classList.remove("is-busy");
     }, FLIP_BACK_DELAY);
   }
 

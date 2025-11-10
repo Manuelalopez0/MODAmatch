@@ -21,9 +21,19 @@
   --shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.05);
   --transition: 300ms ease;
 
+  /* --- Timing & Easing --- */
+  --t-fast: 0.15s;
+  --t-base: 0.28s;
+  --t-slow: 0.45s;
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+
   /* --- Layout --- */
   --container-max: 900px;
   font-size: 16px;
+
+  /* --- Watermark Pattern --- */
+  --watermark-pattern: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><defs><style>.mm{fill:%23c18683;opacity:0.08;}</style></defs><g transform="rotate(32 70 70)"><path class="mm" d="M20 20 L20 100 L35 100 L35 45 L50 100 L65 100 L80 45 L80 100 L95 100 L95 20 L75 20 L60 70 L45 20 Z"/><path class="mm" d="M105 20 L105 100 L120 100 L120 45 L135 100 L150 100 L165 45 L165 100 L180 100 L180 20 L160 20 L145 70 L130 20 Z" transform="translate(0 0)"/></g></svg>');
+  --watermark-pattern-reduced: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><defs><style>.mm{fill:%23c18683;opacity:0.04;}</style></defs><g transform="rotate(32 70 70)"><path class="mm" d="M20 20 L20 100 L35 100 L35 45 L50 100 L65 100 L80 45 L80 100 L95 100 L95 20 L75 20 L60 70 L45 20 Z"/><path class="mm" d="M105 20 L105 100 L120 100 L120 45 L135 100 L150 100 L165 45 L165 100 L180 100 L180 20 L160 20 L145 70 L130 20 Z" transform="translate(0 0)"/></g></svg>');
 }
 
 /* ========================================
@@ -42,10 +52,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: var(--bg) var(--watermark-pattern);
+  background-size: auto, 140px 140px;
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+}
+
+body.bg--plain {
+  background: var(--bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    background: var(--bg) var(--watermark-pattern-reduced);
+    background-size: auto, 140px 140px;
+  }
 }
 
 .container {
@@ -64,6 +86,19 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
+  background: var(--bg) var(--watermark-pattern);
+  background-size: auto, 140px 140px;
+}
+
+.screen.bg--plain {
+  background: var(--bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen {
+    background: var(--bg) var(--watermark-pattern-reduced);
+    background-size: auto, 140px 140px;
+  }
 }
 
 .screen.is-hidden {
@@ -72,19 +107,28 @@ body {
 
 .screen.active:not(.is-hidden) {
   display: flex;
-  animation: fade-in 500ms ease;
+  animation: fade-in var(--t-slow) var(--ease);
   will-change: opacity, transform;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .screen.active:not(.is-hidden) {
-    animation: fade-in 500ms ease;
+    animation: fade-in var(--t-slow) var(--ease);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .screen.active:not(.is-hidden) {
     animation: none;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 }
 
@@ -177,7 +221,8 @@ span {
    ======================================== */
 
 .card {
-  background: var(--card);
+  background-color: var(--card);
+  background-image: none;
   border-radius: 28px;
   box-shadow: var(--shadow-card);
   padding: clamp(1.8rem, 4vw, 3.2rem);
@@ -215,7 +260,8 @@ span {
    ======================================== */
 
 .btn {
-  background: var(--card);
+  background-color: var(--card);
+  background-image: none;
   border: 1px solid rgba(46, 42, 42, 0.08);
   border-radius: 12px;
   color: var(--ink);
@@ -228,26 +274,31 @@ span {
   font-weight: 600;
   font-size: 1rem;
   letter-spacing: 0.01em;
-  transition: all 0.3s ease;
+  transition: transform var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease),
+    background-color var(--t-base) var(--ease), color var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease);
   box-shadow: var(--shadow-soft);
   will-change: transform, background-color, color;
 }
 
-.btn:hover,
-.btn:focus {
-  background: var(--accent-2);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(193, 134, 131, 0.25);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover,
+  .btn:focus {
+    background-color: var(--accent-2);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(193, 134, 131, 0.25);
+  }
 }
 
 .btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring), 0 6px 16px rgba(193, 134, 131, 0.25);
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--ring);
 }
 
 .btn:active {
-  transform: scale(0.98) translateY(-1px);
+  transform: translateY(0) scale(0.98);
 }
 
 /* ========================================
@@ -272,7 +323,8 @@ span {
 }
 
 .stat {
-  background: var(--card);
+  background-color: var(--card);
+  background-image: none;
   border-radius: 16px;
   box-shadow: var(--shadow-soft);
   padding: 0.65rem 1.35rem;
@@ -280,8 +332,8 @@ span {
   font-size: 0.95rem;
   color: var(--ink);
   font-family: var(--font-body);
-  transition: background-color 0.2s ease;
-  will-change: background-color;
+  transition: opacity var(--t-base) var(--ease);
+  will-change: opacity;
 }
 
 .stat-timer {
@@ -342,6 +394,10 @@ span {
   opacity: 0.65;
 }
 
+.card-grid.is-busy {
+  pointer-events: none;
+}
+
 .play-card {
   position: relative;
   display: block;
@@ -368,7 +424,9 @@ span {
   inset: 0;
   border-radius: 18px;
   transform-style: preserve-3d;
-  transition: transform 0.4s ease, box-shadow 0.3s ease;
+  transform-origin: center center;
+  transition: transform var(--t-slow) var(--ease),
+    box-shadow var(--t-base) var(--ease);
   box-shadow: var(--shadow-soft);
   background: var(--card);
   will-change: transform, box-shadow;
@@ -385,7 +443,8 @@ span {
 .play-card.matched .card-inner {
   transform: rotateY(180deg);
   box-shadow: var(--shadow-card);
-  transition: transform 0.4s ease-in-out, box-shadow 0.3s ease;
+  transition: transform var(--t-slow) var(--ease),
+    box-shadow var(--t-base) var(--ease);
 }
 
 .card-face {
@@ -433,6 +492,17 @@ span {
   }
 }
 
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   @keyframes fade-in {
     from {
@@ -440,6 +510,15 @@ span {
     }
     to {
       opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
     }
   }
 
